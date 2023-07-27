@@ -1,20 +1,17 @@
 import subprocess
 import time
+import re
 
 
-battery = "\U0001F50B"
 battery_charging = "\U0001F50C"
-battery_low = "\U0001F505"
 battery_full = "\U0001F50B"  # Same as battery, since the Unicode code point is the same
-ram = "\U0001F5A5"
-core = "\U0001F193"
-brightness = "\U0001F506"
 
 
 
 def runCmd(cmd):
     result = subprocess.run([cmd], shell=True, capture_output=True, text=True)
     return result
+
 
 def read_cpu_temperature():
     try:
@@ -44,12 +41,23 @@ def str_ram():
 
 def str_battery():
     status = runCmd("cat /sys/class/power_supply/BAT0/status").stdout.strip()
-    btry = battery
+    btry = battery_full
     percent = battery_percentage()
     if status == "Charging":
         btry = battery_charging
     char = f'({btry} {percent})'
     return char
+
+def str_volume():
+    data = runCmd("pactl list sinks | grep -E 'Volume:.*front-left|Volume:.*front-right'").stdout.strip()
+    # Use regular expression to find the volume percentage
+    percentage_pattern = r"front-(left|right):\s*\d+\s*\/\s*(\d+)%"
+    matches = re.findall(percentage_pattern, data)
+    if matches:
+        left_per, right_per = int(matches[0][1]), int(matches[1][1])
+        return f"{left_per}-{right_per}%"
+    return f"{None}%"
+
 
 def str_temprature():
     data = read_cpu_temperature()
@@ -60,7 +68,7 @@ def str_temprature():
 
 while True:
     str_ram()
-    cmd = f'xsetroot -name "|   {str_battery()}   |   {str_brightness()}   |   {str_ram()}  |   {str_temprature()}   |   {time.strftime("%I:%M:%S %p")}   |"'
+    cmd = f'xsetroot -name "|   {str_battery()}   |   {str_brightness()}   |   {str_ram()}MB    |   {str_temprature()}    |   {str_volume()}   |   {time.strftime("%I:%M:%S %p")}   |"'
     print(cmd)
     runCmd(cmd)
     time.sleep(1)
