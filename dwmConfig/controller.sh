@@ -14,7 +14,7 @@ function adjust_volume() {
 
 # Check if the number of arguments is correct
 if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 --brightness|--volume <value>"
+  echo "Usage: $0 --brightness (max=741) | --volume <value>"
     exit 1
 fi
 

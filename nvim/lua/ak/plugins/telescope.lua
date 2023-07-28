@@ -29,9 +29,17 @@ vim.keymap.set("n", "<leader>gs", builtin.git_status, {}) -- list current change
 telescope.setup({
 	-- configure custom mappings
 	extensions = {
-		fzy_native = {
-			override_generic_sorter = false,
+		-- TODO: This is for windows only work
+		-- 	fzy_native = {
+		-- 		override_generic_sorter = false,
+		-- 		override_file_sorter = true,
+		-- 	},
+		-- 	TODO: work for linux not windows
+		fzf = {
+			fuzzy = true,
+			override_generic_sorter = true,
 			override_file_sorter = true,
+			case_mode = "smart_case",
 		},
 	},
 	defaults = {
@@ -46,4 +54,5 @@ telescope.setup({
 	},
 })
 
-require("telescope").load_extension("fzy_native")
+-- require("telescope").load_extension("fzy_native")
+require("telescope").load_extension("fzf")

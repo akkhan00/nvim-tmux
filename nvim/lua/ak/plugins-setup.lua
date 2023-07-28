@@ -32,8 +32,8 @@ return packer.startup(function(use)
 
 	-- telescope
 	use({ "nvim-telescope/telescope.nvim", tag = "0.1.1" })
-	use({ "nvim-telescope/telescope-fzy-native.nvim" })
-
+	-- use({ "nvim-telescope/telescope-fzy-native.nvim" })
+	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 	-- autocompletion
 	use("hrsh7th/nvim-cmp") -- completion plugin
 	use("hrsh7th/cmp-buffer") -- source for text in buffer
